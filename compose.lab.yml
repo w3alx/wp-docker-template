@@ -6,6 +6,9 @@ services:
       - ./docker/php/lab.ini:/usr/local/etc/php/conf.d/zz-lab.ini:ro
   adminer:
     ports: !reset []
+  cli:
+    volumes:
+      - ./docker/php/lab.ini:/usr/local/etc/php/conf.d/zz-lab.ini:ro
   gateway:
     image: nginx:stable-alpine
     ports:

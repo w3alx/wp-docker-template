@@ -8,6 +8,8 @@ WordPress-Stack für alle zukünftigen Projekte.
 
 - WordPress mit Apache, standardmäßig PHP 8.5.
 - MariaDB 11 mit projektbezogenem Datenvolume und Healthcheck.
+- WordPress-Healthcheck wartet auf Core-Dateien, Konfiguration und Apache.
+- WP-CLI als kurzlebiger tools-Dienst für automatisierte Installation.
 - Adminer 5 für lokalen Datenbankzugriff.
 - Im Offline-Lab zusätzlich ein kleiner Nginx-Gateway für localhost-Zugriff.
 - `./wordpress_data:/var/www/html` bindet die gesamte Installation lokal ein.
@@ -37,11 +39,52 @@ docker compose -p codex-lab-wp-template -f docker-compose.yml -f compose.lab.yml
 ```
 
 Danach WordPress unter <http://127.0.0.1:18080> und Adminer unter
-<http://127.0.0.1:18088> öffnen. Die WordPress-Erstinstallation erfolgt separat.
+<http://127.0.0.1:18088> öffnen. Diese Lab-Kopie ist bereits vollständig installiert.
 Adminer verwendet Server `db` und die lokalen DB-Zugangsdaten aus `.env`.
 
 Für weitere Projekte einen eigenen Compose-Projektnamen und eigene freie Ports
 verwenden. Keine festen Container-, Netzwerk- oder Volumenamen hinzufügen.
+
+## Neue Projektkopie automatisch installieren
+
+Für einen neuen Zielordner den Lab-Branch frisch klonen, ohne `.env`, `.local`,
+WordPress-Dateien oder DB-Daten aus einem anderen Projekt zu übernehmen:
+
+```bash
+git clone --branch lab/codex-local-wordpress https://github.com/w3alx/wp-docker-template.git mein-projekt
+cd mein-projekt
+python3 scripts/lab.py --project mein-projekt --wp-port 18180 --adminer-port 18188 --title "Mein Projekt"
+```
+
+Voraussetzungen: Python 3, lokaler Docker-Daemon und aktuelles Docker Compose.
+Für den ersten Start müssen die öffentlichen Images heruntergeladen werden können.
+Port- oder Ressourcenkollisionen führen zum Abbruch; andere Projekte werden nicht
+umkonfiguriert. Ein zusätzlicher Host-WP-CLI/PHP-Installer ist nicht erforderlich.
+
+Der Ablauf erzeugt zufällige lokale Datenbank- und Adminpasswörter, startet das
+Lab und installiert WordPress mit `local-admin`, einer `.invalid`-Testadresse,
+Zeitzone `Europe/Berlin` und deaktivierter Suchmaschinenindexierung. Mailbenach-
+richtigungen werden übersprungen. Die Offline-Installation verwendet Englisch;
+Sprachpakete erfordern einen separaten öffentlichen Download. Vorhandene Seiten,
+Beispielinhalte, Themes und Plugins werden nicht automatisch gelöscht.
+
+Das Adminpasswort steht in `.local/wordpress-admin.json` (Dateirechte 0600,
+außerhalb des Webroots und von Git ignoriert). WP-CLI-Ausgabe bei Passwortübergabe
+wird abgefangen, da Prompt-Ausgaben den Wert spiegeln können. Nicht in Logs kopieren.
+
+`.local/project.json` bindet die Kopie an Zielordner, Docker-Daemon, Projektnamen
+und Ports. Dieser Ordner darf nicht in neue Projekte übernommen werden. Geerbte
+Shellvariablen für Compose/DB/Images/Ports werden für den Installer ausgefiltert;
+maßgeblich ist die eigene `.env`. Remote-Docker-Ziele werden abgewiesen.
+
+Bei Wiederholung bleibt eine fertige Installation erhalten. Nach Fehlern kann
+nur die nachweislich eigene, angefangene Installation fortgesetzt werden.
+Nicht leere fremde/teilweise gefüllte Datenbanken werden nicht überinstalliert.
+Bei Konflikten oder Fehlern die Ursache prüfen, keine bestehenden Volumes löschen.
+
+Der projektlokale Skill `create-local-wordpress` unter `.agents/skills/` erklärt
+Codex den Ablauf. Er kann bei passendem Auftrag automatisch gewählt oder direkt
+angefordert werden. Seine praktische Verwendung wurde an einer Wegwerfkopie getestet.
 
 ## Sicherer Testbetrieb
 

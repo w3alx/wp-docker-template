@@ -35,6 +35,8 @@ Desktop.ini
 .env.local
 .env.development
 .env.production
+.local/
+__pycache__/
 
 # ==================================================
 # Dependency Directories
