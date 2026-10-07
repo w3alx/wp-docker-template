@@ -1,0 +1,26 @@
+# Offline test mode. Use together with docker-compose.yml.
+services:
+  wordpress:
+    ports: !reset []
+    volumes:
+      - ./docker/php/lab.ini:/usr/local/etc/php/conf.d/zz-lab.ini:ro
+  adminer:
+    ports: !reset []
+  gateway:
+    image: nginx:stable-alpine
+    ports:
+      - "127.0.0.1:${WP_PORT:-8080}:80"
+      - "127.0.0.1:${ADMINER_PORT:-8088}:8080"
+    volumes:
+      - ./docker/nginx/lab.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - default
+      - ingress
+    depends_on:
+      - wordpress
+      - adminer
+
+networks:
+  default:
+    internal: true
+  ingress: {}
