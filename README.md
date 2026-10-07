@@ -147,6 +147,26 @@ docker compose -p codex-lab-wp-template -f docker-compose.yml -f compose.lab.yml
 Stop-Befehl. Es löscht den Bind-Mount `wordpress_data/` nicht und ist hier
 bewusst nicht als Routine vorgesehen.
 
+### Smoke-Tests vollständig aufräumen
+
+Zusätzlich für einen Test neu erzeugte, eindeutig zugeordnete Smoke-Ressourcen
+werden nach Abschluss oder Fehlern vollständig gelöscht. Das gilt ausdrücklich
+auch für bereits installierte WordPress-Testdaten und benötigt keine erneute
+Rückfrage. Die angeforderte Projektkopie, das Haupt-Lab und bestehende Projekte
+bleiben erhalten.
+
+Vor dem Test Zielordner, Docker-Ziel, Compose-Projektnamen und neu erzeugte
+Ressourcen erfassen. Vor dem Cleanup Labels, Mounts und Pfade mit diesem Manifest
+abgleichen. Für die eigene Smoke-Kopie mit exakt ihrem Projektnamen und beiden
+Compose-Dateien `down -v` ausführen, dann ihren Testordner samt Bind-Mount und
+privaten Zugangsdaten entfernen. Abschließend das Fehlen aller eigenen Container,
+Netzwerke, Volumes und Ordner bestätigen. Globale Prunes und Wildcards vermeiden;
+geteilte Images bleiben als Cache erhalten. Auch delegierte Tests unterliegen
+diesem Ablauf. Bei Fehlern notwendige bereinigte Diagnosen vorher sichern.
+
+Technisch blockiertes Cleanup wird mit konkreten Restressourcen gemeldet.
+Ein gestoppter Smoke-Test gilt nicht als vollständig aufgeräumt.
+
 Vor Abschluss von Änderungen Compose validieren, betroffene Laufzeitfunktionen
 prüfen und `git diff --check` sowie den finalen Diff und Status prüfen.
 Es gibt noch keine Theme-/Plugin-Lints, Unit-Tests oder CI, da noch kein eigener

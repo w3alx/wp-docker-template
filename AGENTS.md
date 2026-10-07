@@ -18,6 +18,17 @@ WordPress-Root einschließlich wp-config.php und .htaccess.
 - Prüfe vor Start/Import Compose-Projekt, Mounts, Volumes und Integrationen.
   Im Lab immer beide Compose-Dateien und den vereinbarten Projektnamen verwenden.
   Keine globalen Docker-Aufräumaktionen und kein Löschen wertvoller Daten.
+- Für Smoke-Tests neu erzeugte, eindeutig zugeordnete Ressourcen werden nach
+  Abschluss oder Fehlern vollständig gelöscht, einschließlich installierter
+  WordPress-Testdaten, Datenbankvolumes, Testordner und Testzugangsdaten.
+  Dafür ist keine erneute Rückfrage nötig. Bestehende Projekte und die Haupt-
+  Testumgebung sind ausgeschlossen. Erfasse vor dem Test Pfade, Docker-Ziel,
+  Compose-Projektnamen und Ressourcen; prüfe vor dem Löschen die Zuordnung.
+  Sichere bei Fehlern nur erforderliche bereinigte Diagnosen, dann räume auf.
+  Der Hauptagent verifiziert auch die Bereinigung delegierter Tests. Nutze nur
+  exakt zugeordnete Löschziele, keine globalen Prunes oder Wildcards.
+  Prüfe anschließend, dass Testcontainer, Netzwerke, Volumes und Ordner weg sind.
+  Technische Blockaden und verbliebene Ressourcen müssen im Abschluss stehen.
 - .env und wordpress_data/ bleiben unversioniert. Keine Secrets in Dokumentation,
   Logs oder Abschlussberichten. Für Beispiele ausschließlich Platzhalter verwenden.
 - Validiere Eingaben, prüfe Berechtigungen und Ausgabekontexte, behandle Fehler
@@ -28,6 +39,7 @@ WordPress-Root einschließlich wp-config.php und .htaccess.
 - Vor Abschluss: Compose-Konfiguration validieren, bei Laufzeitänderungen die
   betroffenen Funktionen testen, finalen Diff und Status prüfen und relevante
   Dokumentation aktualisieren. Trenne vorbestehende Fehler von neuen Problemen.
+  Eigene Smoke-Testressourcen müssen vollständig bereinigt sein.
 - Nenne tatsächlich ausgeführte Checks und verbleibende Einschränkungen.
   Nicht ausgeführte Pflichtchecks gelten nicht als bestanden.
 

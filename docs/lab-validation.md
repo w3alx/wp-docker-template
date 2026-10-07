@@ -19,6 +19,12 @@ Stand: 7. Oktober 2026. Branch: lab/codex-local-wordpress.
 - Separater statischer Review abgeschlossen; Findings korrigiert.
 - Projektlokaler Skill mit offiziellem Skill-Validator validiert und unabhängig
   praktisch getestet; Python-Syntaxprüfung und git diff --check bestanden.
+- Smoke-Cleanup nach ausdrücklicher Freigabe vollständig durchgeführt: acht
+  Testcontainer, vier Netzwerke, zwei DB-Volumes und drei Testordner einschließlich
+  installierter WordPress-Testdaten und privater Credentials entfernt.
+  Zuordnung vorher anhand von Pfaden, Daemon, Labels, Mounts und exklusiver
+  Volumenutzung geprüft; Abschlussprüfung bestätigt keine verbleibenden
+  Smoke-Ressourcen und dieselben vier laufenden Haupt-Lab-Container.
 
 ## Demonstrierte Korrekturen
 

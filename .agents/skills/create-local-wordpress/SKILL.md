@@ -46,3 +46,31 @@ Compose-Dateien und denselben Projektnamen. Temporäre Prüfdateien entfernen.
 Berichte URLs, Zielordner, gespeicherten Zugangsdatenpfad, tatsächliche Checks
 und Einschränkungen. Kundendatenimport, echte Integrationen, Push und Deployment
 sind keine impliziten Bestandteile dieses Skills.
+
+## Temporäre Smoke-Tests
+
+Die angeforderte neue Projektkopie bleibt erhalten. Nur zusätzlich für die
+Verifikation erzeugte Smoke-Kopien sind temporär. Erfasse vor deren Start
+Zielordner, Docker-Ziel, eindeutigen Compose-Projektnamen und die neu erzeugten
+Ressourcen in einem Testmanifest. Verwende keine bestehende Haupt- oder Kunden-
+umgebung als temporären Test und kopiere keine ihrer Daten in das Manifest.
+
+Bereinige eigene Smoke-Ressourcen nach Abschluss vollständig, auch bei Fehlern.
+Installierte WordPress-Testdaten, Datenbankvolumes, Testordner und Testzugangsdaten
+sind ausdrücklich zum Löschen freigegeben; eine erneute Rückfrage ist nicht nötig.
+Prüfe vorher Manifest, tatsächliche Compose-Labels, Mounts und Zielpfade. Entferne
+nur Ressourcen, die für diesen Test neu angelegt wurden. Hauptumgebung und
+bestehende Projekte sind ausgeschlossen. Bei Bedarf zuerst bereinigte Diagnosen
+sichern. Plane die Bereinigung als abschließenden Schritt auch für Subagents ein.
+
+Für eine vollständig eigene Smoke-Kopie entferne ihre Compose-Ressourcen mit
+beiden Dateien, exakt ihrem Projektnamen und `down -v`. Entferne anschließend
+den exakt zugeordneten Testordner einschließlich Bind-Mount und privater Dateien.
+Die Ablehnung einer kopierten Projektidentität erzeugt keinen neuen Docker-
+Eigentümer: lösche nur diesen eigenen Kopieordner, nicht das referenzierte Projekt.
+Keine globalen Prunes, Image-Löschungen oder Wildcards. Geteilte Docker-Images
+sind Cache, keine exklusiven Smoke-Ressourcen.
+
+Prüfe abschließend, dass alle erfassten Testcontainer, Netzwerke, Volumes und
+Ordner entfernt sind und die Hauptumgebung erhalten ist. Ein bloß gestoppter
+Test ist nicht bereinigt. Benenne technische Blockaden samt Restressourcen.
