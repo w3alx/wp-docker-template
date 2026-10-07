@@ -108,3 +108,4 @@ docker-compose.override.yml
 # ==================================================
 
 wp-content/
+wordpress_data/

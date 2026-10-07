@@ -10,7 +10,7 @@ services:
       - db_data:/var/lib/mysql
 
   wordpress:
-    image: wordpress:php8.4-apache
+    image: wordpress:php8.5-apache
     depends_on:
       - db
     ports:
